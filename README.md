@@ -32,6 +32,8 @@ This is an easy way to get the [bearer token in 2 minutes](https://blog.jongalla
 
 This shows the speed at which all of the data is gathered. The equivalent of 12 REST API calls. Some of which could be done asynchronously, but GraphQL does that and handles any dependencies at the same time.
 
+The code is just 200 lines of which the first 80 is imports and type definitions.
+
 ![Example](/media/example.gif)
 
 ## Example
