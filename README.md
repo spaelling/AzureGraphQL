@@ -6,17 +6,19 @@ _Current state is proof of concept._
 
 Python must be installed and some extra modules (I believe the following should cover it)
 
-```
+```python
 pip install ariadne
 pip install aiohttp
 pip install requests
 pip install uvicorn
+# You can also try below which installs aforemention modules
+pip install -r requirements.txt
 ```
 
 Then simply run it
 
 ```
-python '.\path\to\poc.py'
+python '.\path\to\azuregraphql.py'
 ```
 
 and visit [127.0.0.1:8000/](http://127.0.0.1:8000/) in your favorite browser.

@@ -1,0 +1,4 @@
+ariadne
+aiohttp
+requests
+uvicorn
