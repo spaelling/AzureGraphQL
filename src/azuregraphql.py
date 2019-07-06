@@ -198,5 +198,5 @@ async def resolve_subnet(parent, info):
 schema = make_executable_schema(type_def, bindableSchemas)
 app = GraphQL(schema, debug=True)
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     uvicorn.run(app)
