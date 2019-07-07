@@ -15,7 +15,7 @@ pip install uvicorn
 pip install -r requirements.txt
 ```
 
-Then simply run it
+Then simply run [it](/server/src/poc/azuregraphql.py)
 
 ```
 python '.\path\to\azuregraphql.py'
