@@ -1,0 +1,63 @@
+type Resource {
+    id: String!
+    name: String!
+    type: String!        
+    location: String!
+    sku: Sku
+}
+
+type Sku {
+    name: String!
+    tier: String
+}
+
+type ResourceGroup {
+    id: String!
+    name: String!
+    location: String!
+}
+
+type VirtualMachine {
+    id: String!
+    name: String!
+    location: String!
+    nic: NetworkInterface
+    size: String!
+    os: String!
+}
+
+type NetworkInterface {
+    id: String!
+    name: String!
+    ip: String
+    pipid: String
+    publicIP: PublicIP
+    allocationMethod: String!
+    networkSecurityGroup: NetworkSecurityGroup
+    subnet: Subnet
+}
+
+type Subnet {
+    id: String!
+    name: String!
+    addressPrefix: String!
+}
+
+type NetworkSecurityGroup {
+    name: String!
+    id: String!
+    rules: [SecurityRules]
+}
+
+type SecurityRules {
+    name: String!
+    id: String!
+    protocol: String
+    access: String!
+}
+
+type PublicIP {
+    id: String!
+    name: String!
+    ip: String
+}

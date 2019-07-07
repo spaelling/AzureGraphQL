@@ -1,0 +1,5 @@
+type Query {
+    ResourceGroups(subscriptionId: String!): [ResourceGroup]
+    VirtualMachines(subscriptionId: String!): [VirtualMachine]
+    Resources(subscriptionId: String!, resourceGroupName: String, resourceType: String): [Resource]
+}
