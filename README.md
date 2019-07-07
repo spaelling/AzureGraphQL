@@ -1,4 +1,4 @@
-# GraphQL Wrapper for the Azure management API
+# GraphQL Wrapper for the Azure REST API
 
 _Current state is proof of concept._
 
