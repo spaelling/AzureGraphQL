@@ -3,6 +3,7 @@ import asyncio
 import aiohttp
 from ariadne import QueryType, gql, ObjectType, MutationType
 
+# TODO: drop the annotation and do set_field
 query = ObjectType('Query')
 virtualMachine = ObjectType('VirtualMachine')
 networkInterface = ObjectType('NetworkInterface')
