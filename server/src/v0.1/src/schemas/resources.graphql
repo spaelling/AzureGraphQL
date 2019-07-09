@@ -24,6 +24,11 @@ type VirtualMachine {
     nic: NetworkInterface
     size: String!
     os: String!
+    instanceView: InstanceView!
+}
+
+type InstanceView {
+    vmStatus: String!
 }
 
 type NetworkInterface {

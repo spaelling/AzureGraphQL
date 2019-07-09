@@ -6,7 +6,7 @@ function Get-AzgVirtualMachine {
     )
     
     begin {
-        Import-Module ".\src\lib\core.ps1"
+        . "$PSScriptRoot\src\lib\core.ps1"
         $SubscriptionId = (Get-AzContext).Subscription.ID
 
         $qnic = @"
@@ -42,6 +42,9 @@ function Get-AzgVirtualMachine {
                     size
                     os
                     location
+                    instanceView {
+                        vmStatus
+                    }
                     $(
                     if($IncludeNetwork.IsPresent)
                     {
@@ -81,8 +84,11 @@ function Get-AzgVirtualMachine {
             # TODO: only include relevant properties
             foreach ($VM in $Data.VirtualMachines) {
                 $VM | Select-Object -Property name, size, os, location, `
-                @{Name = 'ip'; Expression={$VM.nic.ip}}
+                @{Name = 'ip'; Expression={$VM.nic.ip}},
+                @{Name = 'status'; Expression={$VM.instanceView.vmStatus}}
             }            
         }
     }
 }
+
+Get-AzgVirtualMachine -IncludeNetwork
