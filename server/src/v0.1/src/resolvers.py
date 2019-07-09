@@ -57,6 +57,15 @@ async def resolve_ResourceGroups(_, info, subscriptionId):
     data = await resolveRequest(info, baseuri, params)
     return data
 
+async def resolveConsumption(data):
+    if not data or len(data) == 0:
+        return {'usage': 0.0, 'currency': 'N/A'}
+    sum = 0.0
+    currency = data[0]['properties']['currency']
+    for usage in data:
+        sum += usage['properties'].get('usageQuantity',0.0) * usage['properties'].get('pretaxCost',0.0)
+    return {'usage': sum, 'currency': currency}
+
 @resourceGroup.field("consumption")
 async def resolve_RGConsumption(resourceGroup, info):
     apiVersion = '2019-01-01'
@@ -65,13 +74,7 @@ async def resolve_RGConsumption(resourceGroup, info):
     baseuri = 'https://management.azure.com/subscriptions/%s/providers/Microsoft.Consumption/usageDetails' % subscriptionId
     params = {'api-version': apiVersion, '$filter': ("properties/resourceGroup eq '%s'" % rgName)}    
     data = await resolveRequest(info, baseuri, params)
-    if not data or len(data) == 0:
-        return {'usage': 0.0, 'currency': 'N/A'}
-    sum = 0.0
-    currency = 'DKK' # TODO    
-    for usage in data:
-        sum += usage['properties'].get('usageQuantity',0.0) * usage['properties'].get('pretaxCost',0.0)
-    return {'usage': sum, 'currency': currency}
+    return await resolveConsumption(data)
 
 @query.field("VirtualMachines")
 async def resolve_VirtualMachines(_, info, subscriptionId):
