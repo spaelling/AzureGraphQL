@@ -30,7 +30,9 @@ type VirtualMachine {
     nic: NetworkInterface
     size: String!
     os: String!
+    ResourceGroupName: String!
     instanceView: InstanceView!
+    consumption: Consumption!
 }
 
 type InstanceView {

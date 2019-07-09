@@ -76,6 +76,17 @@ async def resolve_RGConsumption(resourceGroup, info):
     data = await resolveRequest(info, baseuri, params)
     return await resolveConsumption(data)
 
+@virtualMachine.field("consumption")
+async def resolve_vmConsumption(vm, info): 
+    apiVersion = '2019-01-01'
+    subscriptionId = vm['id'].split('/')[2]
+    baseuri = 'https://management.azure.com/subscriptions/%s/providers/Microsoft.Consumption/usageDetails' % subscriptionId
+    # TODO: get all linked resources, nic, pip, disks, etc. and get costs of all those
+    params = {'api-version': apiVersion, '$filter': ("properties/instanceId eq '%s'" % vm['id'])}   
+    print(params['$filter']) 
+    data = await resolveRequest(info, baseuri, params)
+    return await resolveConsumption(data)
+
 @query.field("VirtualMachines")
 async def resolve_VirtualMachines(_, info, subscriptionId):
     apiVersion = '2019-03-01'
@@ -93,7 +104,8 @@ async def resolve_VirtualMachines(_, info, subscriptionId):
             'location': vm['location'],
             '_nicid': vm['properties']['networkProfile']['networkInterfaces'][0]['id'],
             'os': vm['properties']['storageProfile']['osDisk']['osType'],
-            '_vmid': vm['id']
+            '_vmid': vm['id'],
+            'ResourceGroupName': vm['id'].split('/')[4]
             }
         vms.append(d)
     return vms
