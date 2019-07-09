@@ -55,19 +55,17 @@ async def resolve_ResourceGroups(_, info, subscriptionId):
     baseuri = 'https://management.azure.com/subscriptions/%s/resourcegroups' % subscriptionId    
     params = {'api-version': apiVersion}    
     data = await resolveRequest(info, baseuri, params)
-    # data['_subscriptionId'] = subscriptionId
     return data
 
 @resourceGroup.field("consumption")
 async def resolve_RGConsumption(resourceGroup, info):
     apiVersion = '2019-01-01'
     rgName = resourceGroup['name']
-    # subscriptionId = resourceGroup['_subscriptionId']
-    subscriptionId = 'b9334351-cec8-405d-8358-51846fa2a3ab'
+    subscriptionId = resourceGroup['id'].split('/')[2]
     baseuri = 'https://management.azure.com/subscriptions/%s/providers/Microsoft.Consumption/usageDetails' % subscriptionId
     params = {'api-version': apiVersion, '$filter': ("properties/resourceGroup eq '%s'" % rgName)}    
     data = await resolveRequest(info, baseuri, params)
-    if len(data) == 0:
+    if not data or len(data) == 0:
         return {'usage': 0.0, 'currency': 'N/A'}
     sum = 0.0
     currency = 'DKK' # TODO    
