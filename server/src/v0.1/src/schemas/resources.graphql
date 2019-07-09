@@ -15,6 +15,12 @@ type ResourceGroup {
     id: String!
     name: String!
     location: String!
+    consumption: Consumption!
+}
+
+type Consumption {
+    usage: Float!
+    currency: String!
 }
 
 type VirtualMachine {

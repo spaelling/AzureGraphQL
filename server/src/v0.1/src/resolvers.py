@@ -8,8 +8,9 @@ query = ObjectType('Query')
 virtualMachine = ObjectType('VirtualMachine')
 networkInterface = ObjectType('NetworkInterface')
 resource = ObjectType('Resource')
+resourceGroup = ObjectType('ResourceGroup')
 
-bindableSchemas = [query, virtualMachine, networkInterface, resource]
+bindableSchemas = [query, virtualMachine, networkInterface, resource, resourceGroup]
 
 import urllib.parse
 
@@ -20,8 +21,10 @@ async def resolveRequest(info, baseuri, params):
     async with aiohttp.ClientSession() as session:
         query = urllib.parse.urlencode(params)
         uri = "%s?%s" % (baseuri, query)
+        # print(uri)
         async with session.get(uri, headers = headers) as resp:
-            assert resp.status == 200
+            # print(resp.status)
+            # assert resp.status == 200
             data = await resp.json()
     if data.get('error'):
         print(data['error']['message']) # TODO: log error
@@ -52,7 +55,25 @@ async def resolve_ResourceGroups(_, info, subscriptionId):
     baseuri = 'https://management.azure.com/subscriptions/%s/resourcegroups' % subscriptionId    
     params = {'api-version': apiVersion}    
     data = await resolveRequest(info, baseuri, params)
+    # data['_subscriptionId'] = subscriptionId
     return data
+
+@resourceGroup.field("consumption")
+async def resolve_RGConsumption(resourceGroup, info):
+    apiVersion = '2019-01-01'
+    rgName = resourceGroup['name']
+    # subscriptionId = resourceGroup['_subscriptionId']
+    subscriptionId = 'b9334351-cec8-405d-8358-51846fa2a3ab'
+    baseuri = 'https://management.azure.com/subscriptions/%s/providers/Microsoft.Consumption/usageDetails' % subscriptionId
+    params = {'api-version': apiVersion, '$filter': ("properties/resourceGroup eq '%s'" % rgName)}    
+    data = await resolveRequest(info, baseuri, params)
+    if len(data) == 0:
+        return {'usage': 0.0, 'currency': 'N/A'}
+    sum = 0.0
+    currency = 'DKK' # TODO    
+    for usage in data:
+        sum += usage['properties'].get('usageQuantity',0.0) * usage['properties'].get('pretaxCost',0.0)
+    return {'usage': sum, 'currency': currency}
 
 @query.field("VirtualMachines")
 async def resolve_VirtualMachines(_, info, subscriptionId):
